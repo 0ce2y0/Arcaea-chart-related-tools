@@ -177,25 +177,25 @@ def audio_delay_processing(input_audio_delay):
 # 音频延迟对准
     try:
         def adjust_audiooffset(match):
-            new_match_audiooffset = int(match.group(1)) - int(input_audio_delay)
+            new_match_audiooffset = int(match.group(1)) + int(input_audio_delay)
             return f"AudioOffset: {new_match_audiooffset}"
 
         def adjust_timing(match):
-            new_match_group_1 = int(match.group(1)) - int(input_audio_delay)
+            new_match_group_1 = int(match.group(1)) + int(input_audio_delay)
             return f"timing({new_match_group_1},{match.group(2)},{match.group(3)});"
         
         def adjust_tap(match):
-            new_match_group_1 = int(match.group(1)) - int(input_audio_delay)
+            new_match_group_1 = int(match.group(1)) + int(input_audio_delay)
             return f"({new_match_group_1},{match.group(2)});"
 
         def adjust_hold(match):
-            new_match_group_1 = int(match.group(1)) - int(input_audio_delay)
-            new_match_group_2 = int(match.group(2)) - int(input_audio_delay)
+            new_match_group_1 = int(match.group(1)) + int(input_audio_delay)
+            new_match_group_2 = int(match.group(2)) + int(input_audio_delay)
             return f"hold({new_match_group_1},{new_match_group_2},{match.group(3)});"
         
         def adjust_arc(match):
-            new_match_group_1 = int(match.group(1)) - int(input_audio_delay)
-            new_match_group_2 = int(match.group(2)) - int(input_audio_delay)
+            new_match_group_1 = int(match.group(1)) + int(input_audio_delay)
+            new_match_group_2 = int(match.group(2)) + int(input_audio_delay)
             # 单独处理arc部分
             new_base_arc = f"arc({new_match_group_1},{new_match_group_2},{match.group(3)},{match.group(4)},{match.group(5)},{match.group(6)},{match.group(7)},{match.group(8)},{match.group(9)},{match.group(10)})"
             # 单独处理arctap部分
@@ -205,13 +205,13 @@ def audio_delay_processing(input_audio_delay):
                 if arctap_matches:
                     adjusted_arctaps = []
                     for arctap_time in arctap_matches:
-                        adjusted_time = int(arctap_time) - int(input_audio_delay)
+                        adjusted_time = int(arctap_time) + int(input_audio_delay)
                         adjusted_arctaps.append(f"arctap({adjusted_time})")
                     return new_base_arc + "[" + ",".join(adjusted_arctaps) + "]" + ";"
             return new_base_arc + ";"
 
         def adjust_scenecontrol(match):
-            new_match_group_1 = int(match.group(1)) - int(input_audio_delay)
+            new_match_group_1 = int(match.group(1)) + int(input_audio_delay)
             return f"scenecontrol({new_match_group_1},{match.group(2)},{match.group(3)},{match.group(4)});"
 
         # 处理流程
